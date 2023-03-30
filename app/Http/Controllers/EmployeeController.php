@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\employee;
+use App\Models\Gadget;
+use GuzzleHttp\Psr7\Query;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -29,7 +31,7 @@ class EmployeeController extends Controller
         $employee->emp_name = $request->emp_name;
         $employee->designation = $request->designation;
         $employee->salary = $request ->salary;
-        $employee -> save();
+        $employee-> save();
         
         return response()->json([
             'message' => 'employee created',
@@ -75,4 +77,26 @@ class EmployeeController extends Controller
             'message' => 'employee deleted successfully',
         ]);
     }
+
+    public function employee_with_gadgets($id)
+    {     
+        $employee = employee::with(['gadget' => function($query){
+            $query->select('gadgets_name', 'emp_id');
+        }])->where('id', $id)->get(['id', 'emp_name', 'designation', 'salary']);
+        return response()->json([
+            'employee' => $employee,
+        ]);
+    }
+
+    public function employees_with_gadgets()
+    {
+        $employees = employee::with(['gadget' => function($query){
+            $query->select('gadgets_name','emp_id');
+        }])->get(['id','emp_name','designation','salary']);
+
+        return response()->json([
+            'Employees' => $employees,
+        ]);
+    }
+
 }

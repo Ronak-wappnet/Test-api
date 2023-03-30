@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Gadget;
 
 class employee extends Model
 {
@@ -14,4 +15,9 @@ class employee extends Model
         'designation',
         'salary',
     ];
+
+    public function gadget()
+    {
+        return $this->hasMany(Gadget::class,'emp_id');
+    }
 }
